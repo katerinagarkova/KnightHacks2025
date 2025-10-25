@@ -37,13 +37,15 @@ const App: React.FC = () => {
       const res = await fetch("http://127.0.0.1:8000/api/points")
       const data = await res.json()
 
-      const allWaypoints = data.map((element: any, index: number) => ({
-        id: `${Date.now()}-${index}-${Math.random().toString(36).slice(2, 8)}`,
-        x: element[0],
-        y: element[1],
-      }));
+      // const allWaypoints = data.map((element: any, index: number) => ({
+      //   id: `${Date.now()}-${index}-${Math.random().toString(36).slice(2, 8)}`,
+      //   x: element[0],
+      //   y: element[1],
+      // }));
 
-      setWaypoints(allWaypoints)
+      // setWaypoints(allWaypoints)
+
+      
     }
     
     fetchData()
