@@ -5,7 +5,7 @@ interface MapGridProps {
   zoom: number;
   waypoints: Waypoint[];
   dronePos: Point;
-  onAddWaypoint: (point: Point) => void;
+  onAddWaypoint: (waypoint: Waypoint) => void;
 }
 
 const Map: React.FC<MapGridProps> = ({
@@ -18,7 +18,7 @@ const Map: React.FC<MapGridProps> = ({
     const rect = (e.target as HTMLElement).getBoundingClientRect();
     const x = (e.clientX - rect.left) / zoom;
     const y = (e.clientY - rect.top) / zoom;
-    onAddWaypoint({ x, y });
+    onAddWaypoint({ id: Date.now() + x + y, x, y });
   };
 
   return (

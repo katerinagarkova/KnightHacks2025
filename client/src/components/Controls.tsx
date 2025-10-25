@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Point } from "../types";
+import { Point, Waypoint } from "../types";
 
 interface ControlsProps {
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
-  onAddWaypoint: (point: Point) => void;
+  onAddWaypoint: (waypoint: Waypoint) => void;
 }
 
 const Controls: React.FC<ControlsProps> = ({ zoom, setZoom, onAddWaypoint }) => {
@@ -12,7 +12,7 @@ const Controls: React.FC<ControlsProps> = ({ zoom, setZoom, onAddWaypoint }) => 
 
   const handleAdd = () => {
     if (!isNaN(coords.x) && !isNaN(coords.y)) {
-      onAddWaypoint({ x: coords.x, y: coords.y });
+      onAddWaypoint({ id: Date.now() + coords.x + coords.y, x: coords.x, y: coords.y });
       setCoords({ x: 0, y: 0 });
     }
   };

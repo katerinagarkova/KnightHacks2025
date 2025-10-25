@@ -9,12 +9,10 @@ const App: React.FC = () => {
   const [waypoints, setWaypoints] = useState<Waypoint[]>([]);
   const [zoom, setZoom] = useState<number>(1);
   const [dronePos, setDronePos] = useState<Point>({ x: 100, y: 100 });
-  const [count, setCount] = useState(0)
 
-  const addWaypoint = (point: Point) => {
-    const newWaypoint: Waypoint = { id: Date.now() + count, ...point };
+  const addWaypoint = (waypoint: Waypoint) => {
+    const newWaypoint: Waypoint = { ...waypoint };
     setWaypoints(prev => [...prev, newWaypoint]);
-    setCount(prev => prev + 1)
   };
 
   const updateWaypoint = (id: number, newPoint: Point) => {
@@ -38,10 +36,14 @@ const App: React.FC = () => {
     const fetchData = async () => {
       const res = await fetch("http://127.0.0.1:8000/api/points")
       const data = await res.json()
-      data.forEach((element: any, index: number) => {
-        console.log(`${element[0]} ${element[1]}`)
-        addWaypoint({x: element[0], y: element[1]})
-      })
+
+      const allWaypoints = data.map((element: any, index: number) => ({
+        id: Date.now() + index + Math.floor(Math.random() * 1000),
+        x: element[0],
+        y: element[1],
+      }));
+
+      setWaypoints(allWaypoints)
     }
     
     fetchData()
