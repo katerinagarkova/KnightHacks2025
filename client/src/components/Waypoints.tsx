@@ -17,7 +17,7 @@ const Waypoints: React.FC<WaypointsProps> = ({
       {waypoints.map((wp) => (
         <div key={wp.id} className="waypoint-item">
           <span>
-            X: {wp.x.toFixed(1)} | Y: {wp.y.toFixed(1)}
+            X: {wp.x} | Y: {wp.y}
           </span>
           <button onClick={() => onDelete(wp.id)}>🗑</button>
         </div>
