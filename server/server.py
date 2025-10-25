@@ -32,3 +32,14 @@ app.add_middleware(
 @app.get("/api/points")
 def get_points():
     return points_partitions_json
+
+with open("one_drone.txt", 'r') as file:
+    lines = file.readlines()
+    if len(lines) >= 3:
+        pathway = lines[2].strip()
+
+pathing = pathway.split(' -> ') # Splits by comma
+
+@app.get("/api/path")
+def get_path():
+    return (pathing)
