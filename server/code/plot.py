@@ -1,33 +1,33 @@
 import numpy as np # pip install numpy
 from shapely import wkt # pip install shapely
 
-load_distance_array = np.load("distance_matrix.npy", mmap_mode='r')
+load_distance_array = np.load("code/distance_matrix.npy", mmap_mode='r')
 
 print("distance_matrix.npy:")
 print(load_distance_array)
 
 #scipy ????
-load_predecessors = np.load("predecessors.npy", mmap_mode='r')
+load_predecessors = np.load("code/predecessors.npy", mmap_mode='r')
 
 print("predecessors.npy:")
 print(load_predecessors)
 
-points_lat_long = np.load("points_lat_long.npy", mmap_mode='r')
+points_lat_long = np.load("code/points_lat_long.npy", mmap_mode='r')
 
 print("points_lat_long.npy:")
 print(points_lat_long)
 
-assets_index = np.load("asset_indexes.npy", mmap_mode='r')
+assets_index = np.load("code/asset_indexes.npy", mmap_mode='r')
 
 print("asset_indexes.npy:")
 print(assets_index)
 
-photo_indexes = np.load("photo_indexes.npy", mmap_mode='r')
+photo_indexes = np.load("code/photo_indexes.npy", mmap_mode='r')
 
 print("photo_indexes.npy:")
 print(photo_indexes)
 
-with open('polygon_lon_lat.wkt', 'r') as f:
+with open('code/polygon_lon_lat.wkt', 'r') as f:
     wkt_string = f.read()
 
 region = wkt.loads(wkt_string)

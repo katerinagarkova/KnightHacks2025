@@ -5,8 +5,6 @@ import Controls from "./components/Controls";
 import { Waypoint, Point } from "./types";
 import "./App.css";
 
-import { load } from "npyjs"
-
 const App: React.FC = () => {
   const [waypoints, setWaypoints] = useState<Waypoint[]>([]);
   const [zoom, setZoom] = useState<number>(1);
@@ -36,8 +34,11 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const arr = await load("../data/points_lat_long.npy")
-      console.log(arr) 
+      const res = await fetch("http://localhost:3000/api/points")
+      const data = await res.json()
+      await data.map((element: any, index: number) => {
+        addWaypoint({x: element[0], y: element[1]})
+      })
     }
     
     fetchData()
@@ -47,6 +48,7 @@ const App: React.FC = () => {
     <div className="app-container">
       <div className="sidebar">
         <h2>Waypoints</h2>
+        {console.log(waypoints) || true}
         <WaypointList
           waypoints={waypoints}
           onUpdate={updateWaypoint}
