@@ -24,16 +24,17 @@ function App() {
       const [photoStart, photoEnd] = photo_partition;
       const [assetStart, assetEnd] = assets_partition;
 
+      // Reconfigure points array
+      points.forEach((point) => {
+        let temp = point[0]
+        point[0] = point[1]
+        point[1] = temp
+      })
+
       // Slice based on partitions
       const photosArr = points.slice(photoStart, photoEnd + 1);
       const assetsArr = points.slice(assetStart, assetEnd + 1);
-
-      // Waypoints
-      const waypointsArr = [
-        ...points.slice(0, photoStart),
-        ...points.slice(photoEnd + 1, assetStart),
-        ...points.slice(assetEnd + 1),
-      ];
+      const waypointsArr = points.slice(photoEnd + 1, assetStart);
 
       setPhotos(photosArr);
       setAssets(assetsArr);
@@ -43,15 +44,7 @@ function App() {
     fetchData()
   }, [])
 
-        // const allWaypoints = data.map((element: any, index: number) => ({
-      //   id: ${Date.now()}-${index}-${Math.random().toString(36).slice(2, 8)},
-      //   x: element[0],
-      //   y: element[1],
-      // }));
-
-      // setWaypoints(allWaypoints)
-
-      // Helper to compute map center
+  // Helper to compute map center
   const getCenter = (points) => {
     if (!points.length) return [0, 0];
     const avgLat = points.reduce((sum, p) => sum + p[0], 0) / points.length;
@@ -62,34 +55,35 @@ function App() {
   const allPoints = [...photos, ...assets, ...waypoints];
   const center = getCenter(allPoints);
 
-return (
+  return (
     <div style={{ height: "100vh", width: "100%" }}>
       <MapContainer center={center} zoom={12} style={{ height: "100%", width: "100%" }}>
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url={`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`}
           attribution='© OpenStreetMap contributors'
         />
 
         {/* Waypoints in gray */}
         {waypoints.map((p, i) => {
           console.log("Waypoint:", p);
+
             return (
-            <CircleMarker key={`w-${i}`} center={p} radius={4} color="gray">
-              <Popup>Waypoint #{i}</Popup>
-            </CircleMarker>
+              <CircleMarker key={`w-${i}`} center={p} radius={2} color="purple">
+                <Popup>Waypoint #{i}</Popup>
+              </CircleMarker>
           )
         })}
 
         {/* Photos in blue */}
         {photos.map((p, i) => (
-          <CircleMarker key={`p-${i}`} center={p} radius={5} color="blue">
+          <CircleMarker key={`p-${i}`} center={p} radius={2} color="blue">
             <Popup>Photo #{i}</Popup>
           </CircleMarker>
         ))}
 
         {/* Assets in red */}
         {assets.map((p, i) => (
-          <CircleMarker key={`a-${i}`} center={p} radius={5} color="red">
+          <CircleMarker key={`a-${i}`} center={p} radius={2} color="red">
             <Popup>Asset #{i}</Popup>
           </CircleMarker>
         ))}

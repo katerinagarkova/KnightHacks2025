@@ -73,3 +73,4 @@ def print_solution(manager, routing, solution, filename=f"solution_for_{data.get
 solution = routing.SolveWithParameters(search_parameters)
 if solution:
     print_solution(manager, routing, solution)
+    

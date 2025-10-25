@@ -12,8 +12,6 @@ photo_partition = np.load("server/code/photo_indexes.npy")
 
 print(f"{asset_partition}\n{photo_partition}\n[{photo_partition[1] + 1} {asset_partition[0]}]\n{len(points)}")
 
-
-
 points_partitions = {
     "points": points.tolist(),
     "assets_partition": asset_partition.tolist(),
