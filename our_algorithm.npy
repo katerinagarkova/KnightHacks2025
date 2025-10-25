@@ -1,0 +1,22 @@
+'''
+1. **Inspect the data**
+   - Load arrays with `numpy.load`, confirm shapes, and sanity-check index ranges.
+   - Plot the polygon and raw waypoints using any mapping library (Plotly, Folium, GeoPandas, etc.).
+
+2. **Build an unconstrained tour**
+   - Treat the problem as a single-vehicle routing/TSP on `distance_matrix.npy` using the optimization toolkit of your choice (We recommend Google OR-Tools, but there is also NetworkX heuristics, simulated annealing, genetic algorithms, etc.).
+
+3. **Decode real paths**
+   - Convert the abstract tour into detailed waypoint sequences using `predecessors.npy` and the Dijkstra predecessor conventions. This ensures your missions respect the flight polygon boundaries.
+
+4. **Respect battery limits**
+   - Split the route into missions that each start/end at the depot (which is **index 0**, as is typical in routing problems) and stay under a maximum allowed distance. The explicit distance constraint for optimal battery usage is **37,725 feet**. You can design your own heuristics: multi-vehicle VRP formulations, greedy partitioning, or clustering first.
+
+5. **Convert to coordinates**
+   - Translate waypoint indices to longitude/latitude via `points_lat_long.npy` to generate deliverables (maps, CSVs, GeoJSON, etc.).
+
+6. **Visualize and validate**
+   - Overlay missions on the polygon, check that every asset/photo index is covered, and ensure no segment exits the flight zone.
+   - For enhanced visualization, you can use [Plotly Mapbox](https://plotly.com/python/scattermapbox/) (scattermapbox) to display your routes on an actual OpenStreetMap.
+   - Evaluate total distance, energy use estimates, or mission counts. Iterate on your algorithm or run your solver longer to improve metrics.
+'''
