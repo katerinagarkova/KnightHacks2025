@@ -3,7 +3,6 @@ from shapely import wkt # pip install shapely
 from scipy.sparse.csgraph import dijkstra
 from scipy.sparse import csr_matrix
 
-
 predecessors = np.load("predecessors.npy", mmap_mode='r')
 
 def get_path(i, j, predecessors):
