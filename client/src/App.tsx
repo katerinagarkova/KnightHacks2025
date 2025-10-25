@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Map from "./components/Map";
 import WaypointList from "./components/Waypoints";
 import Controls from "./components/Controls";
 import { Waypoint, Point } from "./types";
 import "./App.css";
+
+import { load } from "npyjs"
 
 const App: React.FC = () => {
   const [waypoints, setWaypoints] = useState<Waypoint[]>([]);
@@ -32,7 +34,14 @@ const App: React.FC = () => {
     }
   };
 
-  
+  useEffect(() => {
+    const fetchData = async () => {
+      const arr = await load("../data/points_lat_long.npy")
+      console.log(arr) 
+    }
+    
+    fetchData()
+  }, [])
 
   return (
     <div className="app-container">
@@ -45,7 +54,6 @@ const App: React.FC = () => {
         />
         <button onClick={simulateFlight}>Simulate Flight</button>
       </div>
-
       <Map
         zoom={zoom}
         dronePos={dronePos}
