@@ -38,7 +38,7 @@ const App: React.FC = () => {
       const data = await res.json()
 
       const allWaypoints = data.map((element: any, index: number) => ({
-        id: Date.now() + index + Math.floor(Math.random() * 1000),
+        id: `${Date.now()}-${index}-${Math.random().toString(36).slice(2, 8)}`,
         x: element[0],
         y: element[1],
       }));
