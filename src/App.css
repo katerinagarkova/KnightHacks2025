@@ -1,0 +1,53 @@
+.app-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 250px;
+  background: #1e1e1e;
+  color: white;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.map-grid {
+  flex: 1;
+  position: relative;
+  background: repeating-linear-gradient(0deg, #ccc 0, #ccc 1px, transparent 1px, transparent 50px),
+              repeating-linear-gradient(90deg, #ccc 0, #ccc 1px, transparent 1px, transparent 50px);
+  background-size: 50px 50px;
+  overflow: hidden;
+  cursor: crosshair;
+}
+
+.drone {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: red;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.waypoint {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: blue;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.controls {
+  position: absolute;
+  bottom: 10px;
+  left: 280px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
