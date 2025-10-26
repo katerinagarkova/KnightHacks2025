@@ -13,7 +13,7 @@ def get_segment(i, j, predecessors):
     path.reverse()
     return path
 
-path = {"vehicles": []}
+paths = {"vehicles": []}
 max_route_length = 0
 
 for key, value in unfinished_path.items():
@@ -28,7 +28,7 @@ for key, value in unfinished_path.items():
         distance = value.get("distance", 0)
         max_route_length = max(max_route_length, distance)
 
-        path["vehicles"].append({
+        paths["vehicles"].append({
             "route": vehicle_path,
             "distance": distance
         })
@@ -38,7 +38,7 @@ for key, value in unfinished_path.items():
         for element in vehicle_path:
             latlong.append(pointslist[element])
 
-def get_path():
-    global latlong
-    return latlong
+def get_paths():
+    global paths
+    return paths
 

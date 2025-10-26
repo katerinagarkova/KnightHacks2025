@@ -1,10 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-import points
 import waypoints
 import boundaries
-import path
+import paths
 
 app = FastAPI()
 
@@ -15,10 +14,6 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-@app.get("/api/points")
-def get_points():
-    return points.get_points()
-
 @app.get("/api/waypoints")
 def get_waypoints():
     return waypoints.get_waypoints()
@@ -27,6 +22,6 @@ def get_waypoints():
 def get_boundaries():
     return boundaries.get_boundaries()
 
-@app.get("/api/dronePath")
-def get_path():
-    return path.get_path()
+@app.get("/api/paths")
+def get_paths():
+    return paths.get_paths()

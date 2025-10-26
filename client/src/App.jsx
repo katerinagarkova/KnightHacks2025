@@ -23,11 +23,10 @@ function App() {
   const [exterior, setExterior] = useState([]);
   const [interior, setInterior] = useState([]);
   const [paths, setPaths] = useState([]);
-  const [dronePath, setDronePath] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("http://127.0.0.1:8000/api/points");
+      const res = await fetch("http://127.0.0.1:8000/api/waypoints");
       const rawData = await res.json();
 
       // Parse JSON string from FastAPI
@@ -77,29 +76,22 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("http://127.0.0.1:8000/api/path");
+      const res = await fetch("http://127.0.0.1:8000/api/paths");
       const rawData = await res.json();
 
       const data = typeof rawData === "string" ? JSON.parse(rawData) : rawData;
 
-      console.log(data.vehicles)
 
-      setPaths(data.vehicles);
-    };
+      // Reconfigure points array
+      data.vehicles.forEach((vehicle) => {
+        let temp = vehicle.route[0];
+        vehicle.route[0] = vehicle.route[1];
+        vehicle.route[1] = temp;
+      });
 
-    fetchData();
-  }, []);
+            console.log(data);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("http://127.0.0.1:8000/api/dronePath");
-      const rawData = await res.json();
-
-      const data = typeof rawData === "string" ? JSON.parse(rawData) : rawData;
-
-      console.log(data.vehicles)
-
-      setDronePath(data.vehicles);
+      setPaths(data);
     };
 
     fetchData();
@@ -121,122 +113,145 @@ function App() {
         <p style={{ fontSize: 20 }}>▶ Simulate drone inspection missions ◀</p>
       </header>
       <div
-  style={{
-    position: "relative",
-    height: "100%",
-    width: "100%",
-  }}
->
-  {/* Floating layer control */}
-  <div
-    style={{
-      position: "absolute",
-      top: "10px",
-      right: "10px",
-      zIndex: 1000,
-      background: "rgba(255, 255, 255, 0.9)",
-      padding: "10px 14px",
-      borderRadius: "8px",
-      boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-      fontSize: "14px",
-      lineHeight: "1.6",
-      textAlign: "left",
-    }}
-  >
-    <strong style={{ display: "block", marginBottom: "4px" }}>Layers</strong>
-    <label style={{ display: "block" }}>
-      <input
-        type="checkbox"
-        checked={showPhotos}
-        onChange={() => setShowPhotos(!showPhotos)}
-      />{" "}
-      <span style={{ color: "blue" }}>Photos</span>
-    </label>
-    <label style={{ display: "block" }}>
-      <input
-        type="checkbox"
-        checked={showAssets}
-        onChange={() => setShowAssets(!showAssets)}
-      />{" "}
-      <span style={{ color: "red" }}>Assets</span>
-    </label>
-    <label style={{ display: "block" }}>
-      <input
-        type="checkbox"
-        checked={showWaypoints}
-        onChange={() => setShowWaypoints(!showWaypoints)}
-      />{" "}
-      <span style={{ color: "purple" }}>Waypoints</span>
-    </label>
-    <label style={{ display: "block" }}>
-      <input
-        type="checkbox"
-        checked={showExtBoundaries}
-        onChange={() => setShowExtBoundaries(!showExtBoundaries)}
-      />{" "}
-      <span style={{ color: "orange" }}>Ext Boundaries</span>
-    </label>
-    <label style={{ display: "block" }}>
-      <input
-        type="checkbox"
-        checked={showIntBoundaries}
-        onChange={() => setShowIntBoundaries(!showIntBoundaries)}
-      />{" "}
-      <span style={{ color: "green" }}>Int Boundaries</span>
-    </label>
-  </div>
+        style={{
+          position: "relative",
+          height: "100%",
+          width: "100%",
+        }}
+      >
+        {/* Floating layer control */}
+        <div
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            zIndex: 1000,
+            background: "rgba(255, 255, 255, 0.9)",
+            padding: "10px 14px",
+            borderRadius: "8px",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+            fontSize: "14px",
+            lineHeight: "1.6",
+            textAlign: "left",
+          }}
+        >
+          <strong style={{ display: "block", marginBottom: "4px" }}>
+            Layers
+          </strong>
+          <label style={{ display: "block" }}>
+            <input
+              type="checkbox"
+              checked={showPhotos}
+              onChange={() => setShowPhotos(!showPhotos)}
+            />{" "}
+            <span style={{ color: "blue" }}>Photos</span>
+          </label>
+          <label style={{ display: "block" }}>
+            <input
+              type="checkbox"
+              checked={showAssets}
+              onChange={() => setShowAssets(!showAssets)}
+            />{" "}
+            <span style={{ color: "red" }}>Assets</span>
+          </label>
+          <label style={{ display: "block" }}>
+            <input
+              type="checkbox"
+              checked={showWaypoints}
+              onChange={() => setShowWaypoints(!showWaypoints)}
+            />{" "}
+            <span style={{ color: "purple" }}>Waypoints</span>
+          </label>
+          <label style={{ display: "block" }}>
+            <input
+              type="checkbox"
+              checked={showExtBoundaries}
+              onChange={() => setShowExtBoundaries(!showExtBoundaries)}
+            />{" "}
+            <span style={{ color: "orange" }}>Ext Boundaries</span>
+          </label>
+          <label style={{ display: "block" }}>
+            <input
+              type="checkbox"
+              checked={showIntBoundaries}
+              onChange={() => setShowIntBoundaries(!showIntBoundaries)}
+            />{" "}
+            <span style={{ color: "green" }}>Int Boundaries</span>
+          </label>
+        </div>
 
-  {/* Map */}
-  <MapContainer
-    center={center}
-    zoom={14}
-    style={{ height: "100%", width: "100%" }}
-  >
-    <TileLayer
-      url={`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`}
-      attribution="© OpenStreetMap contributors"
-    />
+        {/* Map */}
+        <MapContainer
+          center={center}
+          zoom={14}
+          style={{ height: "100%", width: "100%" }}
+        >
+          <TileLayer
+            url={`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`}
+            attribution="© OpenStreetMap contributors"
+          />
 
-    {/* Boundaries */}
-    {showExtBoundaries && exterior.length > 1 && (
-      <Polyline positions={exterior} color="orange" weight={2} />
-    )}
-    {showIntBoundaries &&
-      interior.map((segment, index) => (
-        <Polyline key={index} positions={segment} color="green" weight={2} />
-      ))}
+          {/* Boundaries */}
+          {showExtBoundaries && exterior.length > 1 && (
+            <Polyline positions={exterior} color="orange" weight={2} />
+          )}
+          {showIntBoundaries &&
+            interior.map((segment, index) => (
+              <Polyline
+                key={index}
+                positions={segment}
+                color="green"
+                weight={2}
+              />
+            ))}
 
-      {/* Drone Path */}
-    {showIntBoundaries &&
-      paths.map((segment, index) => (
-        <Polyline key={index} positions={segment} color="lightblue" weight={2} />
-      ))}
+          {/* Drone Path */}
+          {/* {
+            paths.vehicles.map((vehicle, index) => (
+              <Polyline
+                key={index}
+                positions={vehicle.route}
+                color="black"
+                weight={2}
+              />
+            ))} */}
 
-    {/* Waypoints */}
-    {showWaypoints &&
-      waypoints.map((p, i) => (
-        <CircleMarker key={`w-${i}`} center={p} radius={0.5} color="purple">
-          <Popup>Waypoint #{i} <br></br> ({p}, {i})</Popup>
-        </CircleMarker>
-      ))}
+          {/* Waypoints */}
+          {showWaypoints &&
+            waypoints.map((p, i) => (
+              <CircleMarker
+                key={`w-${i}`}
+                center={p}
+                radius={0.5}
+                color="purple"
+              >
+                <Popup>
+                  Waypoint #{i} <br></br> ({p}, {i})
+                </Popup>
+              </CircleMarker>
+            ))}
 
-    {/* Photos */}
-    {showPhotos &&
-      photos.map((p, i) => (
-        <CircleMarker key={`p-${i}`} center={p} radius={0.5} color="blue">
-          <Popup>Photo #{i} <br></br> ({p}, {i})</Popup>
-        </CircleMarker>
-      ))}
+          {/* Photos */}
+          {showPhotos &&
+            photos.map((p, i) => (
+              <CircleMarker key={`p-${i}`} center={p} radius={0.5} color="blue">
+                <Popup>
+                  Photo #{i} <br></br> ({p}, {i})
+                </Popup>
+              </CircleMarker>
+            ))}
 
-    {/* Assets */}
-    {showAssets &&
-      assets.map((p, i) => (
-        <CircleMarker key={`a-${i}`} center={p} radius={0.5} color="red">
-          <Popup>Asset #{i} <br></br> ({p}, {i})</Popup>
-        </CircleMarker>
-      ))}
-  </MapContainer>
-</div>
+          {/* Assets */}
+          {showAssets &&
+            assets.map((p, i) => (
+              <CircleMarker key={`a-${i}`} center={p} radius={0.5} color="red">
+                <Popup>
+                  Asset #{i} <br></br> ({p}, {i})
+                </Popup>
+              </CircleMarker>
+            ))}
+        </MapContainer>
+      </div>
 
       <div
         style={{
