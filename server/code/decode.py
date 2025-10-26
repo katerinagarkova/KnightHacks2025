@@ -1,10 +1,8 @@
 import numpy as np # pip install numpy
-from shapely import wkt # pip install shapely
-from scipy.sparse.csgraph import dijkstra
-from scipy.sparse import csr_matrix
-import plotly.graph_objects as go
 
 predecessors = np.load("predecessors.npy", mmap_mode='r')
+
+print(predecessors)
 
 def get_path(i, j, predecessors):
     path = [j]
