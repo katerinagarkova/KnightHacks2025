@@ -4,7 +4,6 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 
-
 load_distance_array = np.load("distance_matrix.npy", mmap_mode='r')
 
 print("distance_matrix.npy:")
@@ -22,15 +21,16 @@ print("points_lat_long.npy:")
 #print(points_lat_long)
 
 # lon, lat
-#for element in points_lat_long:
-    #print(element)
+i = 0
+for element in points_lat_long:
+    i = i + 1
+print("waypoints: ", {i})
 
 assets_index = np.load("asset_indexes.npy", mmap_mode='r')
 
 print("asset_indexes.npy:")
 print(assets_index[0])
 print(assets_index[1])
-
 
 photo_indexes = np.load("photo_indexes.npy", mmap_mode='r')
 
@@ -57,7 +57,7 @@ ax.plot(exterior_x, exterior_y, color='red', linewidth=2, solid_capstyle='round'
 
     # Plot any interiors
 for interior_x, interior_y in interior_coords:
-    ax.plot(interior_x, interior_y, color='blue', linewidth=1, solid_capstyle='round', zorder=1)
+    ax.plot(interior_x, interior_y, color='red', linewidth=1, solid_capstyle='round', zorder=1)
 
     # Set title and labels 
 ax.set_title('Polygon Zone')
@@ -69,6 +69,3 @@ ax.autoscale_view()
 ax.set_aspect('equal', adjustable='box')
 
 plt.show()
-
-
-

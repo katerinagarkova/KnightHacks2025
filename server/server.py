@@ -15,3 +15,7 @@ app.add_middleware(
 @app.get("/api/points")
 def get_points():
     return points.get_points()
+
+@app.get("/api/path")
+def get_points():
+    return points.get_path()
