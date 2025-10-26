@@ -39,7 +39,7 @@ We implemented:
 ### File Details
 File | Role
 | :---------: | :-------------: |
-🔐 decode.py | Reconstructs full paths from the predecessor matrix
+🔐 path.py | Reconstructs the full optimized path with the predecessor matrix
 📊 plot.py | Generates plots and visual diagnostics of flight coverage
 📌 points.py | Loads waypoint data to frontend
 🛩️ vrp.py | computes shortest distance from and back to a point

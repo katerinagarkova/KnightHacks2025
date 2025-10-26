@@ -2,8 +2,6 @@ import numpy as np # pip install numpy
 
 predecessors = np.load("predecessors.npy", mmap_mode='r')
 
-print(predecessors)
-
 def get_path(i, j, predecessors):
     path = [j]
     while predecessors[i, path[-1]] != -9999:  # -9999 means “no predecessor”
