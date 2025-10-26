@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import {
   MapContainer,
@@ -13,6 +11,12 @@ import {
 import "leaflet/dist/leaflet.css";
 
 function App() {
+  const [showPhotos, setShowPhotos] = useState(true);
+  const [showAssets, setShowAssets] = useState(true);
+  const [showWaypoints, setShowWaypoints] = useState(true);
+  const [showBoundaries, setShowBoundaries] = useState(true);
+
+
   const [photos, setPhotos] = useState([]);
   const [assets, setAssets] = useState([]);
   const [waypoints, setWaypoints] = useState([]);
@@ -85,16 +89,8 @@ function App() {
     fetchData();
   }, []);
 
-  // Helper to compute map center
-  const getCenter = (points) => {
-    if (!points.length) return [0, 0];
-    const avgLat = points.reduce((sum, p) => sum + p[0], 0) / points.length;
-    const avgLng = points.reduce((sum, p) => sum + p[1], 0) / points.length;
-    return [avgLat, avgLng];
-  };
-
   const allPoints = [...photos, ...assets, ...waypoints];
-  const center = getCenter(allPoints);
+  const center = [26.7872632610507, -80.11286788653801];
 
   return (
     <div
@@ -108,9 +104,56 @@ function App() {
         <h1 style={{ fontSize: 50 }}>Drone Flight Path Simulator</h1>
         <p style={{ fontSize: 25 }}>▶ Simulate drone inspection missions ◀</p>
       </header>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "20px",
+          alignItems: "center",
+          padding: "10px",
+          background: "rgba(255,255,255,0.8)",
+          borderRadius: "10px",
+          width: "fit-content",
+          margin: "0 auto",
+          marginBottom: "10px",
+        }}
+      >
+        <label>
+          <input
+            type="checkbox"
+            checked={showPhotos}
+            onChange={() => setShowPhotos(!showPhotos)}
+          />{" "}
+          Photos
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={showAssets}
+            onChange={() => setShowAssets(!showAssets)}
+          />{" "}
+          Assets
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={showWaypoints}
+            onChange={() => setShowWaypoints(!showWaypoints)}
+          />{" "}
+          Waypoints
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={showBoundaries}
+            onChange={() => setShowBoundaries(!showBoundaries)}
+          />{" "}
+          Boundaries
+        </label>
+      </div>
       <MapContainer
         center={center}
-        zoom={12}
+        zoom={15}
         style={{ height: "100%", width: "100%" }}
       >
         <TileLayer
