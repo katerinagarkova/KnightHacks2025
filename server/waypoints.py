@@ -6,8 +6,6 @@ points = np.load("code/points_lat_long.npy")
 asset_partition = np.load("code/asset_indexes.npy")
 photo_partition = np.load("code/photo_indexes.npy")
 
-print(f"{asset_partition}\n{photo_partition}\n[{photo_partition[1] + 1} {asset_partition[0]}]\n{len(points)}")
-
 points_partitions = {
     "points": points.tolist(),
     "assets_partition": asset_partition.tolist(),

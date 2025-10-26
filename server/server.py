@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import points
 import waypoints
 import boundaries
+import path
 
 app = FastAPI()
 
@@ -25,3 +26,7 @@ def get_points():
 @app.get("/api/boundaries")
 def get_boundaries():
     return boundaries.get_boundaries()
+
+@app.get("/api/path")
+def get_path():
+    return path.get_path()
