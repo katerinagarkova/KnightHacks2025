@@ -23,6 +23,7 @@ function App() {
   const [exterior, setExterior] = useState([]);
   const [interior, setInterior] = useState([]);
   const [paths, setPaths] = useState([]);
+  const [dronePath, setDronePath] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,6 +85,21 @@ function App() {
       console.log(data.vehicles)
 
       setPaths(data.vehicles);
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch("http://127.0.0.1:8000/api/dronePath");
+      const rawData = await res.json();
+
+      const data = typeof rawData === "string" ? JSON.parse(rawData) : rawData;
+
+      console.log(data.vehicles)
+
+      setDronePath(data.vehicles);
     };
 
     fetchData();
@@ -173,7 +189,7 @@ function App() {
   {/* Map */}
   <MapContainer
     center={center}
-    zoom={12}
+    zoom={14}
     style={{ height: "100%", width: "100%" }}
   >
     <TileLayer
@@ -190,11 +206,17 @@ function App() {
         <Polyline key={index} positions={segment} color="green" weight={2} />
       ))}
 
+      {/* Drone Path */}
+    {showIntBoundaries &&
+      paths.map((segment, index) => (
+        <Polyline key={index} positions={segment} color="lightblue" weight={2} />
+      ))}
+
     {/* Waypoints */}
     {showWaypoints &&
       waypoints.map((p, i) => (
         <CircleMarker key={`w-${i}`} center={p} radius={0.5} color="purple">
-          <Popup>Waypoint #{i} <br></br> ({p.toFixed(2)}, {i.toFixed(2)})</Popup>
+          <Popup>Waypoint #{i} <br></br> ({p}, {i})</Popup>
         </CircleMarker>
       ))}
 
@@ -202,7 +224,7 @@ function App() {
     {showPhotos &&
       photos.map((p, i) => (
         <CircleMarker key={`p-${i}`} center={p} radius={0.5} color="blue">
-          <Popup>Photo #{i} <br></br> ({p.toFixed(2)}, {i.toFixed(2)})</Popup>
+          <Popup>Photo #{i} <br></br> ({p}, {i})</Popup>
         </CircleMarker>
       ))}
 
@@ -210,7 +232,7 @@ function App() {
     {showAssets &&
       assets.map((p, i) => (
         <CircleMarker key={`a-${i}`} center={p} radius={0.5} color="red">
-          <Popup>Asset #{i} <br></br> ({p.toFixed(2)}, {i.toFixed(2)})</Popup>
+          <Popup>Asset #{i} <br></br> ({p}, {i})</Popup>
         </CircleMarker>
       ))}
   </MapContainer>

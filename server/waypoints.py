@@ -30,5 +30,5 @@ latlong = []
 for element in pathing:
     latlong.append(pointslist[element])
 
-def get_path():
+def get_waypoints():
     return latlong

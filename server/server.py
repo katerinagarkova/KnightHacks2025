@@ -27,6 +27,6 @@ def get_points():
 def get_boundaries():
     return boundaries.get_boundaries()
 
-@app.get("/api/path")
+@app.get("/api/dronePath")
 def get_path():
     return path.get_path()
