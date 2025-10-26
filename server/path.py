@@ -33,11 +33,9 @@ for key, value in unfinished_path.items():
             "distance": distance
         })
 
-pathing = list(map(int, vehicle_path)) 
-
 pointslist = coords.tolist()
 latlong = []
-for element in pathing:
+for element in vehicle_path:
     latlong.append(pointslist[element])
 
 def get_path():
