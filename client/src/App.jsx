@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import { MapContainer, TileLayer, Marker, Popup, CircleMarker } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, CircleMarker, Polyline } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
 function App() {
@@ -63,7 +63,7 @@ function App() {
           attribution='© OpenStreetMap contributors'
         />
 
-        {/* Waypoints in gray */}
+        {/* Waypoints */}
         {waypoints.map((p, i) => {
           console.log("Waypoint:", p);
 
@@ -73,20 +73,23 @@ function App() {
               </CircleMarker>
           )
         })}
+        {/* {waypoints.length > 1 && <Polyline positions={waypoints} color="purple" weight={2} />} */}
 
-        {/* Photos in blue */}
+        {/* Photos */}
         {photos.map((p, i) => (
           <CircleMarker key={`p-${i}`} center={p} radius={2} color="blue">
             <Popup>Photo #{i}</Popup>
           </CircleMarker>
         ))}
+        {/* {photos.length > 1 && <Polyline positions={photos} color="blue" weight={3} />} */}
 
-        {/* Assets in red */}
+        {/* Assets */}
         {assets.map((p, i) => (
           <CircleMarker key={`a-${i}`} center={p} radius={2} color="red">
             <Popup>Asset #{i}</Popup>
           </CircleMarker>
         ))}
+        {/* {assets.length > 1 && <Polyline positions={assets} color="red" weight={3} />} */}
       </MapContainer>
     </div>
   );

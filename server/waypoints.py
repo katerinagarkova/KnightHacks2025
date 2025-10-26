@@ -20,12 +20,17 @@ def get_points():
     global points_partitions_json
     return points_partitions_json
 
-with open("one_drone.txt", 'r') as file:
+with open("../one_drone.txt", 'r') as file:
     lines = file.readlines()
     if len(lines) >= 3:
         pathway = lines[2].strip()
 
-pathing = pathway.split(' -> ') # Splits by comma
+pathing = list(map(int, pathway.split(' -> '))) # Splits by comma
+
+pointslist = points.tolist()
+latlong = []
+for element in pathing:
+    latlong.append(pointslist[element])
 
 def get_path():
-    return pathing
+    return latlong
