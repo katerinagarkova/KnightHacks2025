@@ -10,12 +10,40 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
+function calculateDistance(coord1, coord2) {
+  const R = 3958.8; // Earth radius in miles
+  const [lat1, lon1] = coord1;
+  const [lat2, lon2] = coord2;
+
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c; // Distance in miles
+}
+
+function totalPathDistance(path) {
+  let total = 0;
+  for (let i = 1; i < path.length; i++) {
+    total += calculateDistance(path[i - 1], path[i]);
+  }
+  return total;
+}
+
 function App() {
   const [showPhotos, setShowPhotos] = useState(true);
   const [showAssets, setShowAssets] = useState(true);
   const [showWaypoints, setShowWaypoints] = useState(true);
   const [showIntBoundaries, setShowIntBoundaries] = useState(true);
   const [showExtBoundaries, setShowExtBoundaries] = useState(true);
+  const [totalMiles, setTotalMiles] = useState(0);
 
   const [photos, setPhotos] = useState([]);
   const [assets, setAssets] = useState([]);
@@ -92,6 +120,10 @@ function App() {
             console.log(data);
 
       setPaths(data);
+
+      // Calculate total miles
+      const distance = totalPathDistance(allRoutes);
+      setTotalMiles(distance);
     };
 
     fetchData();
@@ -99,6 +131,22 @@ function App() {
 
   const allPoints = [...photos, ...assets, ...waypoints];
   const center = [26.7872632610507, -80.11286788653801];
+
+  const downloadCSV = () => {
+  if (!paths || paths.length === 0) return;
+  const allCoords = paths.flatMap(v => v.route);
+  const csvContent =
+    "data:text/csv;charset=utf-8," +
+    ["latitude,longitude", ...allCoords.map(c => c.join(","))].join("\n");
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "drone_path_coordinates.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
 
   return (
     <div
@@ -254,16 +302,35 @@ function App() {
       </div>
 
       <div
-        style={{
-          background: "linear-gradient(90deg, #0097DA, #78C239)",
-          textAlign: "center",
-          marginTop: "10px",
-          fontSize: "18px",
-        }}
-      >
-        <strong>Total Distance Traveled:</strong>{" "}
-        {/*totalMiles.toFixed(2)} miles*/}
-      </div>
+  style={{
+    background: "linear-gradient(90deg, #0097DA, #78C239)",
+    textAlign: "center",
+    marginTop: "10px",
+    fontSize: "18px",
+    color: "white",
+    padding: "15px 0",
+  }}
+>
+  <strong>Total Distance Traveled:</strong>{" "}
+  {totalMiles.toFixed(2)} miles
+  <br />
+  <button
+    onClick={downloadCSV}
+    style={{
+      marginTop: "8px",
+      background: "#fff",
+      color: "#0097DA",
+      border: "none",
+      padding: "8px 12px",
+      borderRadius: "6px",
+      fontWeight: "bold",
+      cursor: "pointer",
+    }}
+  >
+    Download Drone Path CSV
+  </button>
+</div>
+
     </div>
   );
 }
