@@ -53,7 +53,7 @@ for interior in polygon.interiors:
 fig, ax = plt.subplots()
 
     # Plot the exterior
-ax.plot(exterior_x, exterior_y, color='red', linewidth=2, solid_capstyle='round', zorder=1)
+ax.plot(exterior_x, exterior_y, color='blue', linewidth=2, solid_capstyle='round', zorder=1)
 
     # Plot any interiors
 for interior_x, interior_y in interior_coords:
