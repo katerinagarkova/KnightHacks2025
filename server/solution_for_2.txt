@@ -1,0 +1,4 @@
+Objective: 220196 miles
+Route for vehicle 0:
+ 0 -> 0 
+Route distance: 0 miles

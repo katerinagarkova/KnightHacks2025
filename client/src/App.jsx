@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import { MapContainer, TileLayer, Marker, Popup, CircleMarker, Polyline } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, CircleMarker, Polyline} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
 function App() {
@@ -75,7 +75,11 @@ function App() {
   const center = getCenter(allPoints);
 
   return (
-    <div style={{ height: "100vh", width: "100%" }}>
+    <div style={{ background: "linear-gradient(90deg, #0097DA, #78C239)", height: "100vh", width: "100%" }}>
+      <header style={{ textAlign: "center", padding: "5px", color: "white" }}>
+        <h1 style={{fontSize: 50}}>Drone Flight Path Simulator</h1>
+        <p style={{fontSize: 25}}>▶ Simulate drone inspection missions ◀</p>
+      </header>
       <MapContainer center={center} zoom={12} style={{ height: "100%", width: "100%" }}>
         <TileLayer
           url={`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`}
@@ -112,6 +116,9 @@ function App() {
           </CircleMarker>
         ))}
       </MapContainer>
+      <div style={{ background: "linear-gradient(90deg, #0097DA, #78C239)", textAlign: "center", marginTop: "10px", fontSize: "18px"}}>
+        <strong>Total Distance Traveled:</strong> {/*totalMiles.toFixed(2)} miles*/}
+      </div>
     </div>
   );
 }
