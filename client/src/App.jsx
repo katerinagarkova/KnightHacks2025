@@ -10,6 +10,8 @@ function App() {
   const [photos, setPhotos] = useState([]);
   const [assets, setAssets] = useState([]);
   const [waypoints, setWaypoints] = useState([]);
+  const [exterior, setExterior] = useState([]);
+  const [interior, setInterior] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +46,23 @@ function App() {
     fetchData()
   }, [])
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch("http://127.0.0.1:8000/api/boundaries")
+      const rawData = await res.json()
+
+      // Parse JSON string from FastAPI
+      const data = typeof rawData === "string" ? JSON.parse(rawData) : rawData;
+
+      const { exterior_coords, interior_coords } = data
+
+      setExterior(exterior_coords)
+      setInterior(interior_coords)
+    }
+
+    fetchData()
+  }, [])
+
   // Helper to compute map center
   const getCenter = (points) => {
     if (!points.length) return [0, 0];
@@ -67,33 +86,35 @@ function App() {
           attribution='© OpenStreetMap contributors'
         />
 
-        {/* Waypoints */}
-        {waypoints.map((p, i) => {
-          console.log("Waypoint:", p);
+        {/* Boundaries */}
+        {exterior.length > 1 && <Polyline positions={exterior} color = "orange" weight = {2} />}
+        {
+          interior.map((segment, index) => (
+            <Polyline key = {index} positions={segment} color = "green" weight = {2} />
+          ))
+        }
 
-            return (
-              <CircleMarker key={`w-${i}`} center={p} radius={2} color="blue">
-                <Popup>Waypoint #{i}</Popup>
-              </CircleMarker>
+        {/* Waypoints */}
+        {waypoints.map((p, i) => (
+            <CircleMarker key={`w-${i}`} center={p} radius={.5} color="purple">
+              <Popup>Waypoint #{i}</Popup>
+            </CircleMarker>
           )
-        })}
-        {/* {waypoints.length > 1 && <Polyline positions={waypoints} color="blue" weight={2} />} */}
+        )}
 
         {/* Photos */}
         {photos.map((p, i) => (
-          <CircleMarker key={`p-${i}`} center={p} radius={2} color="green">
+          <CircleMarker key={`p-${i}`} center={p} radius={.5} color="blue">
             <Popup>Photo #{i}</Popup>
           </CircleMarker>
         ))}
-        {/* {photos.length > 1 && <Polyline positions={photos} color="green" weight={3} />} */}
 
         {/* Assets */}
         {assets.map((p, i) => (
-          <CircleMarker key={`a-${i}`} center={p} radius={2} color="black">
+          <CircleMarker key={`a-${i}`} center={p} radius={.5} color="red">
             <Popup>Asset #{i}</Popup>
           </CircleMarker>
         ))}
-        {/* {assets.length > 1 && <Polyline positions={assets} color="black" weight={3} />} */}
       </MapContainer>
       <div style={{ background: "linear-gradient(90deg, #0097DA, #78C239)", textAlign: "center", marginTop: "10px", fontSize: "18px"}}>
         <strong>Total Distance Traveled:</strong> {/*totalMiles.toFixed(2)} miles*/}
