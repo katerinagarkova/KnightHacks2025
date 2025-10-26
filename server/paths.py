@@ -41,4 +41,3 @@ for key, value in unfinished_path.items():
 def get_paths():
     global paths
     return paths
-
