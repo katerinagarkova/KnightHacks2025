@@ -5,6 +5,8 @@ import ortools as ot
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 
+import json
+
 # Opens the distance array file
 BASE_DIR = os.path.dirname(__file__)
 load_distance_array = np.load(os.path.join(BASE_DIR, "code", "distance_matrix.npy"), mmap_mode="r")
@@ -15,7 +17,7 @@ def create_data_model():
     data = {}
     
     data["distance_matrix"] = load_distance_array
-    data["num_vehicles"] = 3
+    data["num_vehicles"] = 2
     data["depot"] = 0 
     
     return data
@@ -90,11 +92,58 @@ def print_solution(manager, routing, solution, filename=f"solution_for_{data.get
             f.write(plan_output)
             max_route_distance = max(route_distance, max_route_distance)
         f.write(f"Max route distance: {max_route_distance}")
+        
+def save_solution(manager, routing, solution, data, filename_prefix=None):
+    if filename_prefix is None:
+        filename_prefix = f"solution_for_{data.get('num_vehicles', 1)}"
+
+    routes = {"vehicles": []}
+    max_route_distance = 0
+    objective_value = solution.ObjectiveValue()
+
+    for vehicle_id in range(data["num_vehicles"]):
+        if not routing.IsVehicleUsed(solution, vehicle_id):
+            continue
+
+        index = routing.Start(vehicle_id)
+        route = []
+        route_distance = 0
+
+        while not routing.IsEnd(index):
+            node = manager.IndexToNode(index)
+            route.append(node)
+            previous_index = index
+            index = solution.Value(routing.NextVar(index))
+            route_distance += routing.GetArcCostForVehicle(previous_index, index, vehicle_id)
+
+        # Append the end node (usually the depot)
+        route.append(manager.IndexToNode(index))
+
+        # Add this vehicle's route to the list
+        routes["vehicles"].append({
+            "route": route,
+            "distance": route_distance
+        })
+
+        max_route_distance = max(max_route_distance, route_distance)
+
+    # Add summary information
+    routes["objective"] = objective_value
+    routes["max_route_distance"] = max_route_distance
+
+    # Save both JSON and NumPy versions
+    with open(f"{filename_prefix}.json", "w") as f:
+        json.dump(routes, f, indent=4)
+
+    np.save(f"{filename_prefix}.npy", routes)
+
+    print(f"Saved solution to {filename_prefix}.json and {filename_prefix}.npy")
+    return routes
 
 # final solution
 solution = routing.SolveWithParameters(search_parameters)
 if solution:
+    routes = save_solution(manager, routing, solution)
     print_solution(manager, routing, solution)
 else : 
     print("No solution found!!")
-    
