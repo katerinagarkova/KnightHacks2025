@@ -14,8 +14,8 @@ function App() {
   const [showPhotos, setShowPhotos] = useState(true);
   const [showAssets, setShowAssets] = useState(true);
   const [showWaypoints, setShowWaypoints] = useState(true);
-  const [showBoundaries, setShowBoundaries] = useState(true);
-
+  const [showIntBoundaries, setShowIntBoundaries] = useState(true);
+  const [showExtBoundaries, setShowExtBoundaries] = useState(true);
 
   const [photos, setPhotos] = useState([]);
   const [assets, setAssets] = useState([]);
@@ -124,6 +124,7 @@ function App() {
       boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
       fontSize: "14px",
       lineHeight: "1.6",
+      textAlign: "left",
     }}
   >
     <strong style={{ display: "block", marginBottom: "4px" }}>Layers</strong>
@@ -154,10 +155,18 @@ function App() {
     <label style={{ display: "block" }}>
       <input
         type="checkbox"
-        checked={showBoundaries}
-        onChange={() => setShowBoundaries(!showBoundaries)}
+        checked={showExtBoundaries}
+        onChange={() => setShowExtBoundaries(!showExtBoundaries)}
       />{" "}
-      <span style={{ color: "orange" }}>Boundaries</span>
+      <span style={{ color: "orange" }}>Ext Boundaries</span>
+    </label>
+    <label style={{ display: "block" }}>
+      <input
+        type="checkbox"
+        checked={showIntBoundaries}
+        onChange={() => setShowIntBoundaries(!showIntBoundaries)}
+      />{" "}
+      <span style={{ color: "green" }}>Int Boundaries</span>
     </label>
   </div>
 
@@ -173,10 +182,10 @@ function App() {
     />
 
     {/* Boundaries */}
-    {showBoundaries && exterior.length > 1 && (
+    {showExtBoundaries && exterior.length > 1 && (
       <Polyline positions={exterior} color="orange" weight={2} />
     )}
-    {showBoundaries &&
+    {showIntBoundaries &&
       interior.map((segment, index) => (
         <Polyline key={index} positions={segment} color="green" weight={2} />
       ))}
@@ -185,7 +194,7 @@ function App() {
     {showWaypoints &&
       waypoints.map((p, i) => (
         <CircleMarker key={`w-${i}`} center={p} radius={0.5} color="purple">
-          <Popup>Waypoint #{i}</Popup>
+          <Popup>Waypoint #{i} \n ({p}, {i})</Popup>
         </CircleMarker>
       ))}
 
@@ -193,7 +202,7 @@ function App() {
     {showPhotos &&
       photos.map((p, i) => (
         <CircleMarker key={`p-${i}`} center={p} radius={0.5} color="blue">
-          <Popup>Photo #{i}</Popup>
+          <Popup>Photo #{i} \n ({p}, {i})</Popup>
         </CircleMarker>
       ))}
 
@@ -201,7 +210,7 @@ function App() {
     {showAssets &&
       assets.map((p, i) => (
         <CircleMarker key={`a-${i}`} center={p} radius={0.5} color="red">
-          <Popup>Asset #{i}</Popup>
+          <Popup>Asset #{i} \n ({p}, {i})</Popup>
         </CircleMarker>
       ))}
   </MapContainer>
