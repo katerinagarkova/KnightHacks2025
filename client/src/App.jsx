@@ -2,10 +2,8 @@ import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import { MapContainer, TileLayer, Marker, Popup, CircleMarker } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, CircleMarker, Polyline } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-
-
 
 function App() {
   const [count, setCount] = useState(0)
@@ -75,7 +73,7 @@ function App() {
               </CircleMarker>
           )
         })}
-        {waypoints.length > 1 && <Polyline positions={waypoints} color="purple" weight={2} />}
+        {/* {waypoints.length > 1 && <Polyline positions={waypoints} color="purple" weight={2} />} */}
 
         {/* Photos */}
         {photos.map((p, i) => (
@@ -83,7 +81,7 @@ function App() {
             <Popup>Photo #{i}</Popup>
           </CircleMarker>
         ))}
-        {photos.length > 1 && <Polyline positions={photos} color="blue" weight={3} />}
+        {/* {photos.length > 1 && <Polyline positions={photos} color="blue" weight={3} />} */}
 
         {/* Assets */}
         {assets.map((p, i) => (
@@ -91,7 +89,7 @@ function App() {
             <Popup>Asset #{i}</Popup>
           </CircleMarker>
         ))}
-        {assets.length > 1 && <Polyline positions={assets} color="red" weight={3} />}
+        {/* {assets.length > 1 && <Polyline positions={assets} color="red" weight={3} />} */}
       </MapContainer>
     </div>
   );
