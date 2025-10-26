@@ -19,14 +19,14 @@ app.add_middleware(
 def get_points():
     return points.get_points()
 
-@app.get("/api/path")
-def get_points():
-    return waypoints.get_path()
+@app.get("/api/waypoints")
+def get_waypoints():
+    return waypoints.get_waypoints()
 
 @app.get("/api/boundaries")
 def get_boundaries():
     return boundaries.get_boundaries()
 
-@app.get("/api/path")
+@app.get("/api/dronePath")
 def get_path():
     return path.get_path()

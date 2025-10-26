@@ -17,7 +17,7 @@ def create_data_model():
     data = {}
     
     data["distance_matrix"] = load_distance_array
-    data["num_vehicles"] = 2
+    data["num_vehicles"] = 1
     data["depot"] = 0 
     
     return data

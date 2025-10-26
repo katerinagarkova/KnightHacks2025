@@ -4,6 +4,7 @@ predecessors = np.load("code/predecessors.npy", mmap_mode='r')
 coords = np.load("code/points_lat_long.npy", mmap_mode='r')
 unfinished_path = np.load("solution_for_1.npy", allow_pickle=True).item()
 
+
 def get_segment(i, j, predecessors):
     path = [j]
     while predecessors[i, path[-1]] != -9999:
