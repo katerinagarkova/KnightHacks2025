@@ -15,7 +15,7 @@ def create_data_model():
     data = {}
     
     data["distance_matrix"] = load_distance_array
-    data["num_vehicles"] = 10
+    data["num_vehicles"] = 3
     data["depot"] = 0 
     
     return data
@@ -97,3 +97,4 @@ if solution:
     print_solution(manager, routing, solution)
 else : 
     print("No solution found!!")
+    
