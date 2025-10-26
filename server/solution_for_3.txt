@@ -1,0 +1,11 @@
+Objective: 224724 feet
+Route for vehicle 0:
+ 0 -> 8 -> 2 -> 6 -> 5 -> 0 
+Route distance: 1552 feet
+Route for vehicle 1:
+ 0 -> 7 -> 1 -> 4 -> 3 -> 15 -> 11 -> 12 -> 0 
+Route distance: 2192 feet
+Route for vehicle 2:
+ 0 -> 9 -> 10 -> 16 -> 14 -> 13 -> 0 
+Route distance: 1780 feet
+Max route distance: 2192
