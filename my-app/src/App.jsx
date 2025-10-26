@@ -2,72 +2,94 @@ import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import Plotly from 'react-plotly.js'
-import * as d3 from 'd3'
+import { MapContainer, TileLayer, Marker, Popup, CircleMarker } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 
 function App() {
   const [count, setCount] = useState(0)
+  const [photos, setPhotos] = useState([]);
+  const [assets, setAssets] = useState([]);
+  const [waypoints, setWaypoints] = useState([]);
 
   useEffect(() => {
-    // Fetch CSV and create Plotly map
-    d3.csv(
-      'https://raw.githubusercontent.com/plotly/datasets/master/2015_06_30_precipitation.csv'
-    ).then(rows => {
-      function unpack(rows, key) {
-        return rows.map(row => row[key])
-      }
+    const fetchData = async () => {
+      const res = await fetch("http://127.0.0.1:8000/api/points")
+      const rawData = await res.json()
 
-      const data = [
-        {
-          type: 'scattermapbox',
-          text: unpack(rows, 'Globvalue'),
-          lon: unpack(rows, 'Lon'),
-          lat: unpack(rows, 'Lat'),
-          marker: { color: 'fuchsia', size: 4 },
-        },
-      ]
+      // Parse JSON string from FastAPI
+      const data = typeof rawData === "string" ? JSON.parse(rawData) : rawData;
 
-      const layout = {
-        dragmode: 'zoom',
-        mapbox: {
-          style: 'open-street-map',
-          center: { lat: 38, lon: -90 },
-          zoom: 3,
-        },
-        margin: { r: 0, t: 0, b: 0, l: 0 },
-      }
+      const { points, assets_partition, photo_partition } = data;
 
-      Plotly.newPlot('myDiv', data, layout)
-    })
+      const [photoStart, photoEnd] = photo_partition;
+      const [assetStart, assetEnd] = assets_partition;
+
+      // Reconfigure points array
+      points.forEach((point) => {
+        let temp = point[0]
+        point[0] = point[1]
+        point[1] = temp
+      })
+
+      // Slice based on partitions
+      const photosArr = points.slice(photoStart, photoEnd + 1);
+      const assetsArr = points.slice(assetStart, assetEnd + 1);
+      const waypointsArr = points.slice(photoEnd + 1, assetStart);
+
+      setPhotos(photosArr);
+      setAssets(assetsArr);
+      setWaypoints(waypointsArr);
+    }
+
+    fetchData()
   }, [])
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React + Plotly</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+  // Helper to compute map center
+  const getCenter = (points) => {
+    if (!points.length) return [0, 0];
+    const avgLat = points.reduce((sum, p) => sum + p[0], 0) / points.length;
+    const avgLng = points.reduce((sum, p) => sum + p[1], 0) / points.length;
+    return [avgLat, avgLng];
+  };
 
-      {/* Plotly chart container */}
-      <div id="myDiv" style={{ width: '100%', height: '500px' }}></div>
-    </>
-  )
+  const allPoints = [...photos, ...assets, ...waypoints];
+  const center = getCenter(allPoints);
+
+  return (
+    <div style={{ height: "100vh", width: "100%" }}>
+      <MapContainer center={center} zoom={12} style={{ height: "100%", width: "100%" }}>
+        <TileLayer
+          url={`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`}
+          attribution='© OpenStreetMap contributors'
+        />
+
+        {/* Waypoints in gray */}
+        {waypoints.map((p, i) => {
+          console.log("Waypoint:", p);
+
+            return (
+              <CircleMarker key={`w-${i}`} center={p} radius={2} color="purple">
+                <Popup>Waypoint #{i}</Popup>
+              </CircleMarker>
+          )
+        })}
+
+        {/* Photos in blue */}
+        {photos.map((p, i) => (
+          <CircleMarker key={`p-${i}`} center={p} radius={2} color="blue">
+            <Popup>Photo #{i}</Popup>
+          </CircleMarker>
+        ))}
+
+        {/* Assets in red */}
+        {assets.map((p, i) => (
+          <CircleMarker key={`a-${i}`} center={p} radius={2} color="red">
+            <Popup>Asset #{i}</Popup>
+          </CircleMarker>
+        ))}
+      </MapContainer>
+    </div>
+  );
 }
 
-export default App
+export default App;

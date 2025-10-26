@@ -55,7 +55,7 @@ search_parameters.first_solution_strategy = (
 )
 
 # Displays the solution returned by the solver
-def print_solution(manager, routing, solution, filename="solution.txt"):
+def print_solution(manager, routing, solution, filename=f"solution_for_{data.get('num_vehicles')}.txt"):
     with open(filename, "w") as f:
         f.write(f"Objective: {solution.ObjectiveValue()} miles\n")
         index = routing.Start(0)
@@ -73,3 +73,4 @@ def print_solution(manager, routing, solution, filename="solution.txt"):
 solution = routing.SolveWithParameters(search_parameters)
 if solution:
     print_solution(manager, routing, solution)
+    
