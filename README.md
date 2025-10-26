@@ -66,7 +66,7 @@ File | Role
 4. The project will be displayed at ```http://localhost:5173```
 
 ## Output 🗺️
-![Output](Zoomed-InView.png)
+![Output](images/Zoomed-InView.png)
 
 ✅ Displayed on Map:
 - Purple Points: General waypoints
