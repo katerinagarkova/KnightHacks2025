@@ -74,4 +74,4 @@ File | Role
 - Purple Lines: Flight paths between mission waypoints
 
 ## Authors:
-Katerina Garkova🐝  Alexander Peacock😼  Tal Avital🤠  Maryam Chaudhry🫧
+[Katerina Garkova🐝](https://www.linkedin.com/in/katerina-garkova/)  [Alexander Peacock😼](https://www.linkedin.com/in/alexander-peacock/)  [Tal Avital🤠](https://www.linkedin.com/in/tal-avital-profile/)  [Maryam Chaudhry🫧](https://www.linkedin.com/in/chaudhrymaryam/)
