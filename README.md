@@ -39,11 +39,11 @@ We implemented:
 ### File Details
 File | Role
 | :---------: | :-------------: |
-🔐 path.py | Reconstructs the full optimized path with the predecessor matrix
-📊 plot.py | Generates plots and visual diagnostics of flight coverage
-📌 points.py | Loads waypoint data to frontend
-🛩️ vrp.py | computes shortest distance from and back to a point
 🚧 boundaries.py | Handles flight boundary polygons and spatial constraint checks
+🔐 path.py | Reconstructs the full optimized path with the predecessor matrix
+💻 server.py | Backend component used to send data to the frontend
+📌 waypoints.py | Loads waypoint data to frontend
+🛩️ vrp.py | computes optimal path based on indexes from and back to a base point
 🌐 app.jsx | Frontend interface — displays map, paths, and categorized points in real time
 
 ## Steps to Reproduce💻
@@ -53,8 +53,8 @@ File | Role
 1. Install python: ```sudo apt install python3```
 2. Enter current directory in VS Code: ```code .```
 3. Install python extensions for VS Code if needed
-4. Set up a virtual environment by clicking ```View > Command Palette... > “Python: Create Environment > Venv```, then choose the location where python was installed
-5. Open the Venv terminal in VS Code by going to the terminal tab on the top 
+4. (Optional) Set up a virtual environment by clicking ```View > Command Palette... > “Python: Create Environment > Venv```, then choose the location where python was installed
+5. (Optional) Open the Venv terminal in VS Code by going to the terminal tab on the top 
 6. Download dependencies: ```pip install replace-with-dependency```
 7. Run the backend: ```uvicorn server.main:app --reload```
 8. The API will be available at ```http://127.0.0.1:8000```
@@ -66,7 +66,7 @@ File | Role
 4. The project will be displayed at ```http://localhost:5173```
 
 ## Output 🗺️
-![Output](Zoomed in view.png)
+![Output](images/Zoomed-InView.png)
 
 ✅ Displayed on Map:
 - Purple Points: General waypoints
