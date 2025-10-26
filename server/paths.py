@@ -27,16 +27,16 @@ for key, value in unfinished_path.items():
 
         distance = value.get("distance", 0)
         max_route_length = max(max_route_length, distance)
-
-        paths["vehicles"].append({
-            "route": vehicle_path,
-            "distance": distance
-        })
-
+        
         pointslist = coords.tolist()
         latlong = []
         for element in vehicle_path:
             latlong.append(pointslist[element])
+
+        paths["vehicles"].append({
+            "route": latlong,
+            "distance": distance
+        })
 
 def get_paths():
     global paths
