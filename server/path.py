@@ -38,7 +38,6 @@ for key, value in unfinished_path.items():
         for element in vehicle_path:
             latlong.append(pointslist[element])
 
-print(latlong)
 def get_path():
     global latlong
     return latlong
