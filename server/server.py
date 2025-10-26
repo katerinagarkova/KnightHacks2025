@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-import waypoints
+import server.points as points
 
 app = FastAPI()
 
@@ -14,4 +14,4 @@ app.add_middleware(
 
 @app.get("/api/points")
 def get_points():
-    return waypoints.get_points()
+    return points.get_points()
