@@ -5,7 +5,7 @@
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 ---
 ## Summary
-This project simulates inspection missions where a drone must visit a series of geo-located waypoints using the shortesst path while respecting battery constraints and returning to the launch site between missions.
+This project simulates inspection missions where a drone must visit a series of geo-located waypoints using the shortest path while respecting battery constraints and returning to the launch site between missions.
 
 This system integrates:
 - 🧮 Optimization algorithms (shortest paths, distance matrices)
@@ -42,6 +42,7 @@ File | Role
 🔐 decode.py | Reconstructs full paths from the predecessor matrix
 📊 plot.py | Generates plots and visual diagnostics of flight coverage
 📌 points.py | Loads waypoint data to frontend
+🛩️ vrp.py | computes shortest distance from and back to a point
 🚧 boundaries.py | Handles flight boundary polygons and spatial constraint checks
 🌐 app.jsx | Frontend interface — displays map, paths, and categorized points in real time
 

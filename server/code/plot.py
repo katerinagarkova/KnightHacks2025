@@ -7,9 +7,8 @@ from matplotlib.patches import Polygon
 load_distance_array = np.load("distance_matrix.npy", mmap_mode='r')
 
 print("distance_matrix.npy:")
-#print(load_distance_array)
+print(load_distance_array)
 
-#scipy ????
 load_predecessors = np.load("predecessors.npy", mmap_mode='r')
 
 print("predecessors.npy:")
