@@ -14,8 +14,8 @@ function App() {
   const [showPhotos, setShowPhotos] = useState(true);
   const [showAssets, setShowAssets] = useState(true);
   const [showWaypoints, setShowWaypoints] = useState(true);
-  const [showBoundaries, setShowBoundaries] = useState(true);
-
+  const [showIntBoundaries, setShowIntBoundaries] = useState(true);
+  const [showExtBoundaries, setShowExtBoundaries] = useState(true);
 
   const [photos, setPhotos] = useState([]);
   const [assets, setAssets] = useState([]);
@@ -23,6 +23,7 @@ function App() {
   const [exterior, setExterior] = useState([]);
   const [interior, setInterior] = useState([]);
   const [paths, setPaths] = useState([]);
+  const [dronePath, setDronePath] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,6 +90,21 @@ function App() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch("http://127.0.0.1:8000/api/dronePath");
+      const rawData = await res.json();
+
+      const data = typeof rawData === "string" ? JSON.parse(rawData) : rawData;
+
+      console.log(data.vehicles)
+
+      setDronePath(data.vehicles);
+    };
+
+    fetchData();
+  }, []);
+
   const allPoints = [...photos, ...assets, ...waypoints];
   const center = [26.7872632610507, -80.11286788653801];
 
@@ -102,94 +118,126 @@ function App() {
     >
       <header style={{ textAlign: "center", padding: "5px", color: "white" }}>
         <h1 style={{ fontSize: 50 }}>Drone Flight Path Simulator</h1>
-        <p style={{ fontSize: 25 }}>▶ Simulate drone inspection missions ◀</p>
+        <p style={{ fontSize: 20 }}>▶ Simulate drone inspection missions ◀</p>
       </header>
       <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "20px",
-          alignItems: "center",
-          padding: "10px",
-          background: "rgba(255,255,255,0.8)",
-          borderRadius: "10px",
-          width: "fit-content",
-          margin: "0 auto",
-          marginBottom: "10px",
-        }}
-      >
-        <label>
-          <input
-            type="checkbox"
-            checked={showPhotos}
-            onChange={() => setShowPhotos(!showPhotos)}
-          />{" "}
-          Photos
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            checked={showAssets}
-            onChange={() => setShowAssets(!showAssets)}
-          />{" "}
-          Assets
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            checked={showWaypoints}
-            onChange={() => setShowWaypoints(!showWaypoints)}
-          />{" "}
-          Waypoints
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            checked={showBoundaries}
-            onChange={() => setShowBoundaries(!showBoundaries)}
-          />{" "}
-          Boundaries
-        </label>
-      </div>
-      <MapContainer
-        center={center}
-        zoom={15}
-        style={{ height: "100%", width: "100%" }}
-      >
-        <TileLayer
-          url={`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`}
-          attribution="© OpenStreetMap contributors"
-        />
+  style={{
+    position: "relative",
+    height: "100%",
+    width: "100%",
+  }}
+>
+  {/* Floating layer control */}
+  <div
+    style={{
+      position: "absolute",
+      top: "10px",
+      right: "10px",
+      zIndex: 1000,
+      background: "rgba(255, 255, 255, 0.9)",
+      padding: "10px 14px",
+      borderRadius: "8px",
+      boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+      fontSize: "14px",
+      lineHeight: "1.6",
+      textAlign: "left",
+    }}
+  >
+    <strong style={{ display: "block", marginBottom: "4px" }}>Layers</strong>
+    <label style={{ display: "block" }}>
+      <input
+        type="checkbox"
+        checked={showPhotos}
+        onChange={() => setShowPhotos(!showPhotos)}
+      />{" "}
+      <span style={{ color: "blue" }}>Photos</span>
+    </label>
+    <label style={{ display: "block" }}>
+      <input
+        type="checkbox"
+        checked={showAssets}
+        onChange={() => setShowAssets(!showAssets)}
+      />{" "}
+      <span style={{ color: "red" }}>Assets</span>
+    </label>
+    <label style={{ display: "block" }}>
+      <input
+        type="checkbox"
+        checked={showWaypoints}
+        onChange={() => setShowWaypoints(!showWaypoints)}
+      />{" "}
+      <span style={{ color: "purple" }}>Waypoints</span>
+    </label>
+    <label style={{ display: "block" }}>
+      <input
+        type="checkbox"
+        checked={showExtBoundaries}
+        onChange={() => setShowExtBoundaries(!showExtBoundaries)}
+      />{" "}
+      <span style={{ color: "orange" }}>Ext Boundaries</span>
+    </label>
+    <label style={{ display: "block" }}>
+      <input
+        type="checkbox"
+        checked={showIntBoundaries}
+        onChange={() => setShowIntBoundaries(!showIntBoundaries)}
+      />{" "}
+      <span style={{ color: "green" }}>Int Boundaries</span>
+    </label>
+  </div>
 
-        {/* Boundaries */}
-        {exterior.length > 1 && (
-          <Polyline positions={exterior} color="orange" weight={2} />
-        )}
-        {interior.map((segment, index) => (
-          <Polyline key={index} positions={segment} color="green" weight={2} />
-        ))}
+  {/* Map */}
+  <MapContainer
+    center={center}
+    zoom={14}
+    style={{ height: "100%", width: "100%" }}
+  >
+    <TileLayer
+      url={`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`}
+      attribution="© OpenStreetMap contributors"
+    />
 
-        {/* Waypoints */}
-        {waypoints.map((p, i) => (
-          <CircleMarker key={`w-${i}`} center={p} radius={0.5} color="purple">
-            <Popup>Waypoint #{i}</Popup>
-          </CircleMarker>
-        ))}
+    {/* Boundaries */}
+    {showExtBoundaries && exterior.length > 1 && (
+      <Polyline positions={exterior} color="orange" weight={2} />
+    )}
+    {showIntBoundaries &&
+      interior.map((segment, index) => (
+        <Polyline key={index} positions={segment} color="green" weight={2} />
+      ))}
 
-        {/* Photos */}
-        {photos.map((p, i) => (
-          <CircleMarker key={`p-${i}`} center={p} radius={0.5} color="blue">
-            <Popup>Photo #{i}</Popup>
-          </CircleMarker>
-        ))}
+      {/* Drone Path */}
+    {showIntBoundaries &&
+      paths.map((segment, index) => (
+        <Polyline key={index} positions={segment} color="lightblue" weight={2} />
+      ))}
 
-        {/* Assets */}
-        {assets.map((p, i) => (
-          <CircleMarker key={`a-${i}`} center={p} radius={0.5} color="red">
-            <Popup>Asset #{i}</Popup>
-          </CircleMarker>
-        ))}
-      </MapContainer>
+    {/* Waypoints */}
+    {showWaypoints &&
+      waypoints.map((p, i) => (
+        <CircleMarker key={`w-${i}`} center={p} radius={0.5} color="purple">
+          <Popup>Waypoint #{i} <br></br> ({p}, {i})</Popup>
+        </CircleMarker>
+      ))}
+
+    {/* Photos */}
+    {showPhotos &&
+      photos.map((p, i) => (
+        <CircleMarker key={`p-${i}`} center={p} radius={0.5} color="blue">
+          <Popup>Photo #{i} <br></br> ({p}, {i})</Popup>
+        </CircleMarker>
+      ))}
+
+    {/* Assets */}
+    {showAssets &&
+      assets.map((p, i) => (
+        <CircleMarker key={`a-${i}`} center={p} radius={0.5} color="red">
+          <Popup>Asset #{i} <br></br> ({p}, {i})</Popup>
+        </CircleMarker>
+      ))}
+  </MapContainer>
+</div>
+
       <div
         style={{
           background: "linear-gradient(90deg, #0097DA, #78C239)",
