@@ -194,7 +194,7 @@ function App() {
     {showWaypoints &&
       waypoints.map((p, i) => (
         <CircleMarker key={`w-${i}`} center={p} radius={0.5} color="purple">
-          <Popup>Waypoint #{i} \n ({p}, {i})</Popup>
+          <Popup>Waypoint #{i} <br></br> ({p.toFixed(2)}, {i.toFixed(2)})</Popup>
         </CircleMarker>
       ))}
 
@@ -202,7 +202,7 @@ function App() {
     {showPhotos &&
       photos.map((p, i) => (
         <CircleMarker key={`p-${i}`} center={p} radius={0.5} color="blue">
-          <Popup>Photo #{i} \n ({p}, {i})</Popup>
+          <Popup>Photo #{i} <br></br> ({p.toFixed(2)}, {i.toFixed(2)})</Popup>
         </CircleMarker>
       ))}
 
@@ -210,7 +210,7 @@ function App() {
     {showAssets &&
       assets.map((p, i) => (
         <CircleMarker key={`a-${i}`} center={p} radius={0.5} color="red">
-          <Popup>Asset #{i} \n ({p}, {i})</Popup>
+          <Popup>Asset #{i} <br></br> ({p.toFixed(2)}, {i.toFixed(2)})</Popup>
         </CircleMarker>
       ))}
   </MapContainer>
