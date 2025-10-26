@@ -22,7 +22,7 @@ function App() {
   const [waypoints, setWaypoints] = useState([]);
   const [exterior, setExterior] = useState([]);
   const [interior, setInterior] = useState([]);
-  const [paths, setPaths] = useState([]);
+  const [paths, setPaths] = useState({"vehicles": []});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,16 +81,11 @@ function App() {
 
       const data = typeof rawData === "string" ? JSON.parse(rawData) : rawData;
 
-
       // Reconfigure points array
       data.vehicles.forEach((vehicle) => {
-        let temp = vehicle.route[0];
-        vehicle.route[0] = vehicle.route[1];
-        vehicle.route[1] = temp;
+        vehicle.route = vehicle.route.map(([lon, lat]) => [lat, lon]);
       });
-
-            console.log(data);
-
+      
       setPaths(data);
     };
 
@@ -206,15 +201,14 @@ function App() {
             ))}
 
           {/* Drone Path */}
-          {/* {
-            paths.vehicles.map((vehicle, index) => (
-              <Polyline
-                key={index}
-                positions={vehicle.route}
-                color="black"
-                weight={2}
-              />
-            ))} */}
+          {paths.vehicles.map((vehicle, index) => (
+            <Polyline
+              key={index}
+              positions={vehicle.route}
+              color="black"
+              weight={2}
+            />
+          ))}
 
           {/* Waypoints */}
           {showWaypoints &&
